@@ -1,0 +1,192 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>User</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link crossorigin="anonymous"
+          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+          rel="stylesheet">
+</head>
+{% if user %}
+<nav class="navbar navbar-light navbar-expand-lg shadow" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="#">
+        <i class="fa fa-camera-retro" aria-hidden="true"></i>
+        {{ header }}
+    </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarNavDropdown">
+    <ul class="navbar-nav mr-sm-2">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ user.email() }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{{ url }}">
+              <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+              {{url_string}}</a>
+            <a class="dropdown-item" href="/">
+                <i class="fa fa-arrow-left" aria-hidden="true"></i>
+
+              Back
+          </a>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+     <form action="/duplicate_gallery" method="post">
+            <input name="gal" type="hidden" value="{{header}}"/>
+            <i class="fa fa-files-o fa-lg text-dark"
+               aria-hidden="true"></i>
+            <input class="btn btn-outline-dark btn-sm" type="submit"
+                   value="Find Duplicates"/>
+        </form>
+</nav>
+
+{% if error %}
+<br>
+<div class="clearfix p-4 mb-4" style="margin-top: 1%; background-color: red;">
+    <center>
+ <span class="alert alert-light">
+      <b>ERROR: {{ error }} </b>
+ </span>
+    </center>
+</div>
+<br>
+{% endif %}
+
+<center>
+    <div class="clearfix p-4 mb-4" style="margin-top: 1%; background-color: #e3f2fd;">
+        <h4><b><u>Edit your Gallery Name:</u></b></h4>
+        <br/>
+        <br/>
+        <form action="/edit_gal_name" method="post"
+              style="display: inline;">
+            Enter New Name:
+            <input name="oldName" type="hidden" value="{{header}}"/>
+            <input id="newgalName" name="newgalleryName"
+                   type="text">
+            <input class="btn btn-outline-success btn-sm" type="submit"
+                   value="Edit Name"/>
+        </form>
+        <form action="/delete_gallery" method="post"
+              style="display: inline;">
+            <input name="gal" type="hidden" value="{{header}}"/>
+            <input class="btn btn-outline-danger btn-sm" type="submit"
+                   value="Delete"/>
+        </form>
+        <br/>
+        <br/>
+
+
+    </div>
+</center>
+
+
+<div class="card-text" id="edit" style="background-color: #e3f2fd;">
+    <center>
+        <form action="{{ upload_url }}" enctype="multipart/form-data"
+              method="post">
+
+            <input accept="image/png, image/jpeg"
+                   class="form-control-file btn btn-outline-dark"
+                   name="file"
+                   style="width: 30%"
+                   type="file">
+            <input class="btn btn-outline-dark btn-sm" hidden="true"
+                   name="gal"
+                   type="text" value="{{header}}"/>
+            <input class="btn btn-outline-success" type="submit"/>
+            <input class="btn btn-outline-danger" name="button"
+                   onclick="window.location.replace('/upload')"
+                   type="button"
+                   value="Cancel"/>
+
+        </form>
+    </center>
+</div>
+
+
+{% if arr %}
+<u>
+<h4 class="text-dark" style="text-align: center;">
+    My Galleries:
+</h4>
+    </u>
+<br/><br/>
+<div class="container">
+    <div class="row">
+        {% for i in arr %}
+        <div class="col-md-5">
+            <div class="row align-items-center" style="margin-top:50px;">
+
+                <div class="col">
+                    {% if i.id > 0 %}
+                    <img src="/download_file?index={{i.id}}"
+                         style="width:300px; height:300px "/>
+                    <br>
+                    {% else %}
+                    <div style="width:230px; height:120px"></div>
+                    {% endif %}
+                    <form action="/delete_image" method="post"
+                          style="display: inline;  margin-left: 20%;">
+                        <input name="gal" type="hidden"
+                               value="{{header}}"/>
+                        <input name="imageId" type="hidden" value="{{i.id}}"/>
+                        <input class="btn btn-outline-danger btn-sm"
+                               type="submit"
+                               value="Delete"/>
+
+                    </form>
+                    <br>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+<br/><br/>
+{% endif %}
+
+
+{% else %}
+
+
+<div class="clearfix">
+    <hr>
+    <center>
+        <h3>
+            <i class="fa fa-camera-retro" aria-hidden="true"></i>
+            Welcome to the Image Section
+        </h3>
+    </center>
+    <hr>
+    <br>
+    <center>
+        <div class="btn-group">
+            <button class="btn btn-outline-dark btn-sm"
+                    type="button">
+                <a class="dropdown-item btn-sm"
+                   href='{{ url }}'>
+                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+
+                    {{url_string}}</a>
+            </button>
+        </div>
+    </center>
+    <hr>
+</div>
+
+{% endif %}
+
+</body>
+</html>

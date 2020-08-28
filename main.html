@@ -1,0 +1,148 @@
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Welcome</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+          rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <link crossorigin="anonymous"
+          href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+          rel="stylesheet">
+
+</head>
+<body>
+{% if user %}
+<nav class="navbar navbar-light shadow navbar-expand-lg " style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="#">
+        <i class="fa fa-camera-retro" aria-hidden="true"></i>
+        {{ header }}
+    </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse form-inline my-2 my-lg-0" id="navbarNavDropdown">
+    <ul class="navbar-nav mr-sm-2">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{ user.email() }}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{{ url }}">
+              <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+              {{url_string}}</a>
+        </div>
+      </li>
+    </ul>
+  </div>
+    <form action="/duplicate_all" method="post" style="display: inline;">
+            <i class="fa fa-files-o fa-lg" aria-hidden="true"></i>
+
+            <input class="btn btn-outline-dark btn-sm" type="submit"
+                   value="Find Duplicates"/>
+        </form>
+</nav>
+
+
+{% if error %}
+<br>
+<div class="clearfix p-4 mb-4" style="margin-top: 1%; background-color: red;">
+    <center>
+ <span class="alert alert-light">
+      <b>ERROR: {{ error }} </b>
+ </span>
+    </center>
+</div>
+<br>
+
+{% endif %}
+
+<div class="clearfix p-4 mb-4" style="margin-top: 1%; background-color: #e3f2fd;">
+    <center>
+
+        <form action="/add_name" method="post" class="form-inline">
+            <label class="badge badge-pill badge-dark"
+                   style="margin-right: 2%; margin-left: 20%"
+                   for="name">Gallery name:</label>
+            <input class="form-control btn btn-outline-dark btn-sm"
+                   id="name" aria-describedby="unique_gallery"
+                   name="name" placeholder="Enter name!" type="text"
+                   style="width:700px; margin-right: 2%;">
+
+            <input class="btn btn-outline-success btn-sm" type="submit"/>
+
+        </form>
+        <small class="form-text text-muted" id="unique_gallery">
+           <i>(The gallery name should be unique!!)</i>
+        </small>
+    </center>
+</div>
+
+
+{% if arr %}
+<u><h4 style="text-align: center;">My Galleries</h4></u>
+<br/><br/>
+<div class="container">
+    <div class="row">
+        {% for i in arr %}
+        <div class="col-md-4">
+            <div class="row align-items-center" style="margin-top:50px;">
+
+                <div class="col">
+                    {% if i.id > 0 %}
+                    <img src="/download_file?index={{i.id}}"
+                         style="width:200px;height:200px "/>
+                    <br>
+                    {% else %}
+                    <div style="width:200px;height:100px"></div>
+                    {% endif %}
+                      <a href="/gallery?name={{i.gal}}" class="text-info">
+                          <b>
+                              {{i.gal}}
+                            </b>
+                      </a>
+                    <br>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+<br/><br/>
+{% endif %}
+
+{% else %}
+
+<div class="clearfix">
+    <hr>
+    <center>
+        <h3>
+            <i class="fa fa-camera-retro" aria-hidden="true"></i>
+            Welcome to the Image Section
+        </h3>
+    </center>
+    <hr>
+    <br>
+    <center>
+        <div class="btn-group">
+            <button class="btn btn-outline-dark btn-sm"
+                    type="button">
+                <a class="dropdown-item btn-sm"
+                   href='{{ url }}'>
+                    <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+
+                    {{url_string}}</a>
+            </button>
+        </div>
+    </center>
+    <hr>
+</div>
+
+{% endif %}
+
+</body>
+</html>
